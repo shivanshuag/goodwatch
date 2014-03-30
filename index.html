@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6 lt8"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7 lt8"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8 lt8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="UTF-8" />
+  <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">  -->
+  <title>GoodWatch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+ 
+</head>
+<body>
+  <div class="container">
+    <div class="status-bar row" style="display:none">
+      <div class="large-6 large-offset-4 columns">
+        <div data-alert class="alert-box" id="status-div">
+          <span id="status"></span>
+        </div>
+      </div>
+    </div>
+    <h1 class="title">GoodWatch</h1>
+    <div id="loginError">
+    </div>
+    <div id="login">
+      <form class="form-horizontal" autocomplete="on" action="javascript:void(0);" id="loginForm">
+        <fieldset>
+
+          <!-- Form Name -->
+          <legend>Login</legend>
+
+          <!-- Text input-->
+          <div class="control-group">
+            <label class="control-label" for="username">username</label>
+            <div class="controls">
+              <input id="username" name="username" type="text" placeholder="username" class="input-medium" required="">
+              <p class="help-block">Only alphanumeric value, minimum length of 4.</p>
+            </div>
+          </div>
+
+          <!-- Password input-->
+          <div class="control-group">
+            <label class="control-label" for="password">password</label>
+            <div class="controls">
+              <input id="password" name="password" type="password" placeholder="******" class="input-medium" required="">
+              <p class="help-block">choose a password, minimum length of 6.</p>
+            </div>
+          </div>
+
+          <!-- Button -->
+          <div class="control-group">
+            <label class="control-label" for="loginBtn"></label>
+            <div class="controls">
+              <button id="loginBtn" name="loginBtn" class="btn btn-success">login</button>
+            </div>
+          </div>
+          
+        </fieldset>
+      </form>
+      <div class="row">
+        <div class="large-6 large-centered small-6 small-centered columns">
+          <p class="change_link">
+            Not a member yet ?
+            <a id="toregister" href="#">Join us</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div id="register" class="animate form" style="display:none;">
+      <form class="form-horizontal" autocomplete="on" action="javascript:void(0);" id="registerForm">
+        <fieldset>
+
+          <!-- Form Name -->
+          <legend>Sign Up</legend>
+
+          <!-- Text input-->
+          <div class="control-group">
+            <label class="control-label" for="username">username</label>
+            <div class="controls">
+              <input id="username-register" name="username" type="text" placeholder="username" class="input-medium" required="">
+              <p class="help-block">Only alphanumeric value, minimum length of 4.</p>
+            </div>
+          </div>
+
+          <!-- Textarea -->
+          <div class="control-group">
+            <label class="control-label" for="bio">about you</label>
+            <div class="controls">                     
+              <textarea id="bio" name="bio">I am Super Man, Your friendly neighbourhood.</textarea>
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="control-group">
+            <label class="control-label" for="fullname">full name</label>
+            <div class="controls">
+              <input id="fullname" name="fullname" type="text" placeholder="clark kent" class="input-medium" required="">
+              <p class="help-block">Your full name</p>
+            </div>
+          </div>
+
+
+          <!-- Text input-->
+          <div class="control-group">
+            <label class="control-label" for="email">email</label>
+            <div class="controls">
+              <input id="email" name="email" type="text" placeholder="superman@krypton.com" class="input-medium" required="">
+              <p class="help-block">Your e-mail ID</p>
+            </div>
+          </div>
+
+          <!-- Password input-->
+          <div class="control-group">
+            <label class="control-label" for="password">password</label>
+            <div class="controls">
+              <input id="password-register" name="password" type="password" placeholder="******" class="input-medium" required="">
+              <p class="help-block">choose a password, minimum length of 6.</p>
+            </div>
+          </div>
+
+          <!-- Password input-->
+          <div class="control-group">
+            <label class="control-label" for="password_confirm">confirm password</label>
+            <div class="controls">
+              <input id="password_confirm" name="password_confirm" type="password" placeholder="******" class="input-medium" required="">
+              <p class="help-block">enter same password as above, again.</p>
+            </div>
+          </div>
+
+
+          <!-- Button -->
+          <div class="control-group">
+            <label class="control-label" for="registerBtn"></label>
+            <div class="controls">
+              <button id="registerBtn" name="registerBtn" class="btn btn-success">Submit</button>
+            </div>
+          </div>
+
+        </fieldset>
+      </form>
+      <div class="row">
+        <div class="large-6 large-centered small-6 small-centered columns">
+          Already a member ?
+          <a id="tologin" href="#"> Go and log in </a>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+    <div id='main'>
+      <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">GoodWatch</a>
+          </div>
+        </div><!-- /.container-fluid -->
+      </nav>
+      </div>    
+      <div class="row">
+        <div class="col-xs-9">
+
+        </div>
+        <div class="col-xs-3">
+        </div>      
+      </div>
+
+    </div>
+    <div id="root-footer"></div>
+  </div>
+
+  <!--build:js scripts/index.js -->
+  <script src="js/index.js"></script>
+  <!--endbuild-->
+  
+    <style type="text/css">
+    #gplusBtn {
+      display: inline-block;
+      background: #dd4b39;
+      color: white;
+      width: 165px;
+      border-radius: 5px;
+      white-space: nowrap;
+    }
+    #gplusBtn:hover {
+      background: #e74b37;
+      cursor: hand;
+    }
+    span.label {
+      font-weight: bold;
+    }
+    span.buttonText {
+      display: inline-block;
+      vertical-align: middle;
+      padding-left: 35px;
+      padding-right: 35px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  </style>
+</body>
+</html>
