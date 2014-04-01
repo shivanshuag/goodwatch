@@ -80,3 +80,36 @@
       }
     });
 });
+
+$('#rec-movie').click(function(e){
+  console.log('modal')
+  $('#modal1').modal('show');
+});
+
+$( ".name-search" ).autocomplete({
+  source: function( request, respond ){
+    $.ajax({
+      type:'POST',
+      url:' http://localhost:7474/db/data/cypher',
+      contentType: 'application/json',
+      data:JSON.stringify({
+          "query" : 'MATCH (n) where n.name =~ {term} RETURN n',
+          "params" : {
+           "term" : "(?i)"+request.term+".*"
+          }
+        })
+    }).done(function(msg){
+      //console.log(msg);
+      respond(msg.data);
+    })
+  }
+  }).data("ui-autocomplete")._renderItem = function( ul, item ) {
+    console.log(item);
+    return $( "<li><a>"+item[0]['data']['name']+"</a></li>" ).appendTo( ul );
+  };
+
+
+  $( ".name-search" ).bind( "autocompleteselect", function( event, ui ) {
+    //console.log("selected");
+    $('#modal1').modal('show');
+  });
