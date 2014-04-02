@@ -95,7 +95,7 @@ $( ".name-search" ).autocomplete({
       data:JSON.stringify({
           "query" : 'MATCH (n) where n.name =~ {term} RETURN n',
           "params" : {
-           "term" : "(?i)"+request.term+".*"
+           "term" : "(?i).*"+request.term+".*"
           }
         })
     }).done(function(msg){
