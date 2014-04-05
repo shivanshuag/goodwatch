@@ -23,6 +23,17 @@
       color: black;
       font-size: 16;
     }
+    .auto-center{
+        //position: absolute;
+        //left:45%;
+        margin-top: -1em
+    }
+    .modal-dialog{
+      width:80%;
+    }
+    .right{
+      float:right;
+    }
     </style>
 </head>
 <body>
@@ -217,6 +228,129 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+
+
+    <div class="modal fade" id="movie-modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="movie-title">Modal title</h4>
+          </div>
+          <div class="movie-modal-body">
+            <div class="row">
+              <div class="col-xs-4">
+                <img src='' id='movie-image'></img>
+              </div>
+            <div class="col-xs-8">
+              <div class="row">
+                <div class="col-xs-8">
+                  <h4>Storyline</h4>
+                  <p id="storyline"></p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-8">
+                  <h4>Rating</h4>
+                  <p id="rating"></p>
+                </div>  
+              </div>
+              <div class="row">
+                <div class="col-xs-8">
+                  <h4>Director</h4>
+                  <p id="director"></p>
+                </div>  
+              </div>
+              <div class="row">
+                <div class="col-xs-8">
+                  <h4>Actors</h4>
+                  <p id="actors"></p>
+                </div>
+              </div>
+            </div>      
+      </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="like-movie" class="btn btn-primary">Like</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <div class="modal fade" id="actor-modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="actor-title">Modal title</h4>
+          </div>
+          <div class="actor-modal-body">
+            <div class="row">
+              <div class="col-xs-4">
+                <img src='' id='actor-image'></img>
+              </div>
+            <div class="col-xs-8">
+              <div class="row">
+                <div class="col-xs-8">
+                  <h4>Imdb Link</h4>
+                  <p id="imdb-link"></p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-8">
+                  <h4>Movies</h4>
+                  <p id="actor-movies"></p>
+                </div>  
+              </div>
+            </div>      
+          </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="like-actor" class="btn btn-primary">Like</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <div class="modal fade" id="director-modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="director-title">Modal title</h4>
+          </div>
+          <div class="director-modal-body">
+            <div class="row">
+              <div class="col-xs-4">
+                <img src='' id='actor-image'></img>
+              </div>
+            <div class="col-xs-8">
+              <div class="row">
+                <div class="col-xs-8">
+                  <h4>Movies</h4>
+                  <p id="director-movies"></p>
+                </div>  
+              </div>
+            </div>      
+          </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="like-director" class="btn btn-primary">Like</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
     <div id="root-footer"></div>
   </div>
 
