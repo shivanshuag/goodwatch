@@ -33,6 +33,86 @@
           alert('success');
           $('#login').hide(300);
           $('#main').show(300);
+
+          array1 = [];
+          array2 = [];
+          array3 = [];
+          array4 = [];
+          $.ajax({
+            type:'POST',
+            url:' http://localhost:7474/db/data/cypher',
+            contentType: 'application/json',
+            data:JSON.stringify({
+              "query" : "MATCH (p:Person {username: {username}})-[:LIKES]->(m:Movie), (m)-[:Acted]-(a:Actor), (m)-[:Directed]-(d:Director), (m)-[:GENRE]-(g:Genre), (n:Movie)-[:Acted]-(a), (n:Movie)-[:Directed]-(d), (n)-[:GENRE]-(g) where n<>m return distinct n order by n.rating DESC limit 50",
+              "params" : {
+               "username" : $('#username-register').val()
+              }
+            })
+          }).done(function(msg){
+            //console.log(msg);
+            array1 = msg.data;
+          });
+
+
+          $.ajax({
+            type:'POST',
+            url:' http://localhost:7474/db/data/cypher',
+            contentType: 'application/json',
+            data:JSON.stringify({
+              "query" : "MATCH (p:Person {username: {username}})-[:LIKES]->(m:Movie), (m)-[:Directed]-(d:Director), (m)-[:GENRE]-(g:Genre), (n:Movie)-[:Directed]-(d), (n)-[:GENRE]-(g) where n<>m return distinct n order by n.rating DESC limit 50",
+              "params" : {
+               "username" : $('#username-register').val(),
+              }
+            })
+          }).done(function(msg){
+            //console.log(msg);
+            array2 = msg.data;
+          });
+
+
+
+          $.ajax({
+            type:'POST',
+            url:' http://localhost:7474/db/data/cypher',
+            contentType: 'application/json',
+            data:JSON.stringify({
+              "query" : "MATCH (p:Person {username: {username}})-[:LIKES]->(m:Movie), (m)-[:Acted]-(a:Actor), (m)-[:Directed]-(d:Director), (n:Movie)-[:Acted]-(a), (n:Movie)-[:Directed]-(d) where n<>m return distinct n order by n.rating DESC limit 50",
+              "params" : {
+               "username" : $('#username-register').val()
+              }
+            })
+          }).done(function(msg){
+            //console.log(msg);
+            array3 = msg.data;
+          });
+
+
+
+          $.ajax({
+            type:'POST',
+            url:' http://localhost:7474/db/data/cypher',
+            contentType: 'application/json',
+            data:JSON.stringify({
+              "query" : "MATCH (p:Person {username: {username}})-[:LIKES]->(m:Movie), (m)-[:Acted]-(a:Actor), (m)-[:GENRE]-(g:Genre), (n:Movie)-[:Acted]-(a), (n)-[:GENRE]-(g) where n<>m return distinct n order by n.rating DESC limit 50",
+              "params" : {
+               "username" : $('#username-register').val()
+              }
+            })
+          }).done(function(msg){
+            //console.log(msg);
+            array4 = msg.data
+          });
+
+          console.log(_.union(array4, array3, array2, array1));
+
+
+
+
+
+
+
+
+
         }
         else
           alert('faliure');
@@ -215,7 +295,7 @@ $( ".name-search" ).autocomplete({
 
       var i=0;
       for(i=0;i<msg['data'].length;i++){
-        movies += msg['data'][i][0]['data']['name']+"("+msg['data'][i][0]['data']['year']+")"+"<br>"
+        movies = msg['data'][i][0]['data']['name']+"("+msg['data'][i][0]['data']['year']+")"+"<br>" + movies;
       }
       $('#actor-movies').html(movies);
     });
@@ -279,7 +359,7 @@ $( ".name-search" ).autocomplete({
 
       var i=0;
       for(i=0;i<msg['data'].length;i++){
-        movies += msg['data'][i][0]['data']['name']+"("+msg['data'][i][0]['data']['year']+")"+"<br>"
+        movies = msg['data'][i][0]['data']['name']+"("+msg['data'][i][0]['data']['year']+")"+"<br>" + movies
       }
       $('#director-movies').html(movies);
     });
