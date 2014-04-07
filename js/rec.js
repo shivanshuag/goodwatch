@@ -89,6 +89,102 @@ function load_movies(){
 }
 
 
+function load_genres(){
+  $.ajax({
+    type:'POST',
+    url:' http://localhost:7474/db/data/cypher',
+    contentType: 'application/json',
+    data:JSON.stringify({
+      "query" : "MATCH (p:Person {username: {username}})-[:LIKES]->(g:Genre), (m:Movie)-[:GENRE]-(g) where not (p)-[:LIKES]-(m) return distinct m order by m.rating DESC limit 200",
+      "params" : {
+       "username" : $('#username').val()
+      }
+    })
+  }).done( function(msg){
+    populate(msg.data)
+  });
+}
+
+function load_actors(){
+  $.ajax({
+    type:'POST',
+    url:' http://localhost:7474/db/data/cypher',
+    contentType: 'application/json',
+    data:JSON.stringify({
+      "query" : "MATCH (p:Person {username: {username}})-[:LIKES]->(a:Actor), (m:Movie)-[:Acted]-(a) where not (p)-[:LIKES]-(m) return distinct m order by m.rating DESC limit 200",
+      "params" : {
+       "username" : $('#username').val()
+      }
+    })
+  }).done( function(msg){
+    populate(msg.data)
+  });
+}
+
+function load_global(){
+
+  function query1(){
+    return (  
+      $.ajax({
+        type:'POST',
+        url:' http://localhost:7474/db/data/cypher',
+        contentType: 'application/json',
+        data:JSON.stringify({
+          "query" : "match (p:Person {username:{username}})-[:LIKES]-(a:Actor), (p)-[:LIKES]-(g:Genre), (m:Movie)-[:Acted]->(a), (m)-[:GENRE]-(g) where not (p)-[:LIKES]-(m) return m",
+          "params" : {
+           "username" : $('#username').val()
+          }
+        })
+      })
+    );
+  }
+
+  function query2(){
+    return (  
+      $.ajax({
+        type:'POST',
+        url:' http://localhost:7474/db/data/cypher',
+        contentType: 'application/json',
+        data:JSON.stringify({
+          "query" : "match (p:Person {username:{username}})-[:LIKES]-(a:Actor), (p)-[:LIKES]-(d:Director), (m:Movie)-[:Acted]->(a), (m)-[:Directed]-(d) where not (p)-[:LIKES]-(m) return m",
+          "params" : {
+           "username" : $('#username').val()
+          }
+        })
+      })
+    );
+  }
+
+
+  function query3(){
+    return (  
+      $.ajax({
+        type:'POST',
+        url:' http://localhost:7474/db/data/cypher',
+        contentType: 'application/json',
+        data:JSON.stringify({
+          "query" : "match (p:Person {username:{username}})-[:LIKES]-(d:Director), (p)-[:LIKES]-(g:Genre), (m)-[:Directed]-(d), (m)-[:GENRE]-(g) where not (p)-[:LIKES]-(m) return m",
+          "params" : {
+           "username" : $('#username').val()
+          }
+        })
+      })
+    );
+  }
+
+  $.when(query3(), query2(), query1()).done( function(msg3, msg2, msg1){
+    console.log(msg3);
+    console.log(msg2);
+    console.log(msg1);
+    movies = _.union(msg3[0].data, msg2[0].data, msg1[0].data);
+    movies = _.sortBy(movies, function(item){
+      return item[0].data.rating;
+    });
+    populate(movies.reverse());
+
+  });
+}
+
 function populate(movies){
   $('.movie-rec').off('click');
   $('#rec').html('');
@@ -97,10 +193,10 @@ function populate(movies){
   })
   var i = 0, j=0;
   for(i=0;i<movies.length;i+=3){
-    html = "<br><div class='row'>"
+    html = "<br><br><div class='row'>"
     $('#rec').append(html);
     for(j=0;j<3;j++){
-      if(i+j > movies.length)
+      if(i+j >= movies.length)
         break;
       name = movies[i+j][0].data.name;
       poster = movies[i+j][0].data.poster;

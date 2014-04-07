@@ -33,7 +33,7 @@
           alert('success');
           $('#login').hide(300);
           $('#main').show(300);
-          load_movies()
+          load_global()
         }
         else
           alert('faliure');
@@ -101,7 +101,7 @@ $( ".name-search" ).autocomplete({
   }
   }).data("ui-autocomplete")._renderItem = function( ul, item ) {
     console.log(item);
-    return $( "<li><a><p class='auto-left'>"+item[1][0]+":</p><p class='auto-center'>"+item[0]['data']['name']+"</p></a></li>" ).appendTo( ul );
+    return $( "<li><a><p class='auto-left'>"+item[1][0]+":</p><p class='auto-center'>"+item[0]['data']['name']+(item[1][0] == 'Movie' ? ' ('+item[0]['data']['year']+')':'')+"</p></a></li>" ).appendTo( ul );
   };
 
 
@@ -343,3 +343,28 @@ function load_movie(ui){
         }
       });
 }
+
+$('#rec-genre').on('click', function(e){
+  $('#navbar-links > li.active').removeClass('active');
+  $('#rec-genre').addClass('active')
+  load_genres();
+});
+$('#rec-movie').on('click', function(e){
+    $('#navbar-links > li.active').removeClass('active');
+  $('#rec-movie').addClass('active')
+
+  load_movies();
+});
+$('#rec-actor').on('click', function(e){
+    $('#navbar-links > li.active').removeClass('active');
+  $('#rec-actor').addClass('active')
+
+  load_actors();
+});
+
+$('#rec-home').on('click', function(e){
+    $('#navbar-links > li.active').removeClass('active');
+  $('#rec-home').addClass('active')
+
+  load_global();
+});
