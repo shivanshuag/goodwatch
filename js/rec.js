@@ -186,29 +186,34 @@ function load_global(){
 }
 
 function populate(movies){
-  $('.movie-rec').off('click');
-  $('#rec').html('');
-  movies = _.uniq(movies, function(item,key,a){
-    return item[0].data.name;
-  })
-  var i = 0, j=0;
-  for(i=0;i<movies.length;i+=3){
-    html = "<br><br><div class='row'>"
-    $('#rec').append(html);
-    for(j=0;j<3;j++){
-      if(i+j >= movies.length)
-        break;
-      name = movies[i+j][0].data.name;
-      poster = movies[i+j][0].data.poster;
-      year = '('+movies[i+j][0].data.year+')';
-      html = "<div class='col-xs-4 movie-rec' ><img src='"+poster+"' id='movie"+(i+j)+"'></img><br><span>"+name+year+"</div>";
+  if (movies.length == 0){
+    $('#rec').html("Too few likes to give recommendation yet! Please like a few more Direcotrs, Movies, Acotrs and Genres");
+  }
+  else{
+    $('.movie-rec').off('click');
+    $('#rec').html('');
+    movies = _.uniq(movies, function(item,key,a){
+      return item[0].data.name;
+    })
+    var i = 0, j=0;
+    for(i=0;i<movies.length;i+=3){
+      html = "<br><br><div class='row'>"
       $('#rec').append(html);
-      id = '#movie'+(i+j);
-      $(id).on('click',{'item':movies[i+j]}, function(e){
-        load_movie(e.data);
-      });
+      for(j=0;j<3;j++){
+        if(i+j >= movies.length)
+          break;
+        name = movies[i+j][0].data.name;
+        poster = movies[i+j][0].data.poster;
+        year = '('+movies[i+j][0].data.year+')';
+        html = "<div class='col-xs-4 movie-rec' ><img src='"+poster+"' id='movie"+(i+j)+"'></img><br><span>"+name+year+"</div>";
+        $('#rec').append(html);
+        id = '#movie'+(i+j);
+        $(id).on('click',{'item':movies[i+j]}, function(e){
+          load_movie(e.data);
+        });
+      }
+      $('#rec').append("</div>");
     }
-    $('#rec').append("</div>");
   }
 }
 
