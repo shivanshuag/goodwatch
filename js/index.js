@@ -368,3 +368,15 @@ $('#rec-home').on('click', function(e){
 
   load_global();
 });
+
+$('#rec-director').on('click', function(e){
+    $('#navbar-links > li.active').removeClass('active');
+  $('#rec-director').addClass('active')
+  load_directors();
+});
+
+$('#logout').on('click', function(e){
+  $('#main').hide(300);
+  $('#login').show();
+  $('#password').val('');
+});

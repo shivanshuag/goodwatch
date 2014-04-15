@@ -185,6 +185,24 @@ function load_global(){
   });
 }
 
+function load_directors(){
+  $.ajax({
+    type:'POST',
+    url:' http://localhost:7474/db/data/cypher',
+    contentType: 'application/json',
+    data:JSON.stringify({
+      "query" : "MATCH (p:Person {username: {username}})-[:LIKES]->(d:Director), (m:Movie)-[:Directed]-(d) where not (p)-[:LIKES]-(m) return distinct m order by m.rating DESC limit 200",
+      "params" : {
+       "username" : $('#username').val()
+      }
+    })
+  }).done( function(msg){
+    populate(msg.data)
+  });
+}
+
+
+
 function populate(movies){
   if (movies.length == 0){
     $('#rec').html("Too few likes to give recommendation yet! Please like a few more Direcotrs, Movies, Acotrs and Genres");
