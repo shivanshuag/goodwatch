@@ -16,12 +16,49 @@ function loadGlobal() {
         contentType: 'application/json',
     }).done(function(msg){
         console.log(msg);
-        msg = _.sortBy(_.uniq( _.flatten(msg), function(item,key,a) {return item.name.value;}), function(item){return item.rating.value; }).reverse()
         populate(msg);
     });
 }
 
+function loadGenres(){
+  $.ajax({
+    type:'GET',
+    url:'api/recg',
+    contentType: 'application/json',
+  }).done( function(msg){
+    populate(msg)
+  });
+}
+
+function loadActors(){
+  $.ajax({
+    type:'GET',
+    url:'api/reca',
+    contentType: 'application/json',
+  }).done( function(msg){
+    populate(msg)
+  });
+}
+function loadDirectors(){
+  $.ajax({
+    type:'GET',
+    url:'api/recd',
+    contentType: 'application/json',
+  }).done( function(msg){
+    populate(msg)
+  });
+}
+function loadMovies(){
+  $.ajax({
+    type:'GET',
+    url:'api/recm',
+    contentType: 'application/json',
+  }).done( function(msg){
+    populate(msg)
+  });
+}
 function populate(movies){
+    movies = _.sortBy(_.uniq( _.flatten(movies), function(item,key,a) {return item.name.value;}), function(item){return item.rating.value; }).reverse()
   if (movies.length == 0){
     $('#rec').html("Too few likes to give recommendation yet! Please like a few more Direcotrs, Movies, Acotrs and Genres");
   }
@@ -267,32 +304,32 @@ function load_movie(ui){
 $('#rec-genre').on('click', function(e){
   $('#navbar-links > li.active').removeClass('active');
   $('#rec-genre').addClass('active')
-  load_genres();
+  loadGenres();
 });
 $('#rec-movie').on('click', function(e){
     $('#navbar-links > li.active').removeClass('active');
   $('#rec-movie').addClass('active')
 
-  load_movies();
+  loadMovies();
 });
 $('#rec-actor').on('click', function(e){
     $('#navbar-links > li.active').removeClass('active');
   $('#rec-actor').addClass('active')
 
-  load_actors();
+  loadActors();
 });
 
 $('#rec-home').on('click', function(e){
     $('#navbar-links > li.active').removeClass('active');
   $('#rec-home').addClass('active')
 
-  load_global();
+  loadGlobal();
 });
 
 $('#rec-director').on('click', function(e){
     $('#navbar-links > li.active').removeClass('active');
   $('#rec-director').addClass('active')
-  load_directors();
+  loadDirectors();
 });
 
 $('#logout').on('click', function(e){

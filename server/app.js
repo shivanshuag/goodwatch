@@ -134,6 +134,144 @@ client.connect(graphSettings, function(err, client){
     });*/
 });
 
+app.get('/api/recg', function(req,res) {
+    qs = {
+        script: 'i0=g.v('+req.session.userId+')\nx=[];i0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x).back(4).outE(\'Likes\').inV().has(\'type\',\'Genre\').inE(\'GENRE\').outV().except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})[0..<200]',
+    'rexster.showTypes':true
+    }
+    var options = {
+        hostname: graphSettings.host,
+        port: graphSettings.port,
+        path: '/graphs/' + graphSettings.graph + '/tp/gremlin?'+ querystring.stringify(qs),
+        headers: {
+            'Content-type': 'application/json;charset=utf-8'
+        }
+    }
+
+    http.get(options, function(resp) {
+        var body = '';
+        resp.on('data', function(chunk) {
+            body += chunk;
+        });
+        resp.on('end', function() {
+            body = JSON.parse(body);
+            res.json(body.results);
+        })
+        if (body.message || body.success === false) {
+            res.send('error');
+        }
+    }).on('error', function(){
+        res.send('error');
+    });
+});
+app.get('/api/reca', function(req,res) {
+    qs = {
+        script: 'i0=g.v('+req.session.userId+')\nx=[];i0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x).back(4).outE(\'Likes\').inV().has(\'type\',\'Actor\').inE(\'Acted\').outV().except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})[0..<200]',
+    'rexster.showTypes':true
+    }
+    var options = {
+        hostname: graphSettings.host,
+        port: graphSettings.port,
+        path: '/graphs/' + graphSettings.graph + '/tp/gremlin?'+ querystring.stringify(qs),
+        headers: {
+            'Content-type': 'application/json;charset=utf-8'
+        }
+    }
+
+    http.get(options, function(resp) {
+        var body = '';
+        resp.on('data', function(chunk) {
+            body += chunk;
+        });
+        resp.on('end', function() {
+            body = JSON.parse(body);
+            res.json(body.results);
+        })
+        if (body.message || body.success === false) {
+            res.send('error');
+        }
+    }).on('error', function(){
+        res.send('error');
+    });
+});
+app.get('/api/recd', function(req,res) {
+    qs = {
+        script: 'i0=g.v('+req.session.userId+')\nx=[];i0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x).back(4).outE(\'Likes\').inV().has(\'type\',\'Director\').inE(\'Directed\').outV().except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})[0..<200]',
+    'rexster.showTypes':true
+    }
+    var options = {
+        hostname: graphSettings.host,
+        port: graphSettings.port,
+        path: '/graphs/' + graphSettings.graph + '/tp/gremlin?'+ querystring.stringify(qs),
+        headers: {
+            'Content-type': 'application/json;charset=utf-8'
+        }
+    }
+
+    http.get(options, function(resp) {
+        var body = '';
+        resp.on('data', function(chunk) {
+            body += chunk;
+        });
+        resp.on('end', function() {
+            body = JSON.parse(body);
+            res.json(body.results);
+        })
+        if (body.message || body.success === false) {
+            res.send('error');
+        }
+    }).on('error', function(){
+        res.send('error');
+    });
+});
+app.get('/api/recm', function(req,res) {
+    qs = [];
+    results = [];
+    count = 0
+    qs.push ({
+        script: 'i0=g.v('+req.session.userId+')\nx=[];i0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x).back(2).outE(\'Acted\').inV().inE(\'Acted\').outV().outE(\'Directed\').inV().inE(\'Likes\').outV().filter(){it==i0}.back(5)except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})[0..<50]',
+    'rexster.showTypes':true
+    });
+    qs.push ({
+        script: 'i0=g.v('+req.session.userId+')\nx=[];i0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x).back(2).outE(\'Acted\').inV().inE(\'Acted\').outV().outE(\'GENRE\').inV().inE(\'Likes\').outV().filter(){it==i0}.back(5)except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})[0..<50]',
+    'rexster.showTypes':true
+    });
+    qs.push ({
+        script: 'i0=g.v('+req.session.userId+')\nx=[];i0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x).back(2).outE(\'Acted\').inV().inE(\'Directed\').outV().outE(\'GENRE\').inV().inE(\'Likes\').outV().filter(){it==i0}.back(5)except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})[0..<200]',
+    'rexster.showTypes':true
+    });
+    function getOptions(i){
+        var options = {
+            hostname: graphSettings.host,
+            port: graphSettings.port,
+            path: '/graphs/' + graphSettings.graph + '/tp/gremlin?'+ querystring.stringify(qs[i]),
+            headers: {
+                'Content-type': 'application/json;charset=utf-8'
+            }
+        };
+        return options;
+    }
+    for(i=0;i<qs.length;i++){
+        http.get(getOptions(i), function(resp) {
+            var body = '';
+            resp.on('data', function(chunk) {
+                body += chunk;
+            });
+            resp.on('end', function() {
+                body = JSON.parse(body);
+                results.push(body.results);
+                count++;
+                if(count == qs.length)
+                    res.json(body.results);
+            })
+            if (body.message || body.success === false) {
+                count++;
+            }
+        }).on('error', function(){
+            count++;
+        });
+    }
+});
 app.get('/api/rec', function(req, res) {
     var count = 0;
     var result = [];
@@ -225,7 +363,6 @@ app.get('/api/rec', function(req, res) {
 app.get('/api/search/:query', function (req, res) {
     //console.log(req.session);
     var param = req.params.query;
-    console.log(param);
     var qs = {
         script: 'g.V.has("name", Text.CONTAINS_REGEX, ".*'+param+'.*")',
         'rexster.showTypes': true
@@ -238,7 +375,6 @@ app.get('/api/search/:query', function (req, res) {
             'Content-type': 'application/json;charset=utf-8'
         }
     };
-    console.log(options)
     http.get(options, function(resp) {
         var body = '';
         resp.on('data', function(chunk) {
