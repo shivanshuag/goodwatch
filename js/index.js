@@ -16,6 +16,7 @@ function loadGlobal() {
         contentType: 'application/json',
     }).done(function(msg){
         console.log(msg);
+        msg = _.sortBy(_.uniq( _.flatten(msg), function(item,key,a) {return item.name.value;}), function(item){return item.rating.value; }).reverse()
         populate(msg);
     });
 }
@@ -27,9 +28,9 @@ function populate(movies){
   else{
     $('.movie-rec').off('click');
     $('#rec').html('');
-    movies = _.uniq(movies, function(item,key,a){
+    /*movies = _.uniq(movies, function(item,key,a){
       return item.name.value;
-    })
+    })*/
     var i = 0, j=0;
     for(i=0;i<movies.length;i+=3){
       html = "<br><br><div class='row'>"

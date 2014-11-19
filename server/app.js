@@ -139,21 +139,29 @@ app.get('/api/rec', function(req, res) {
     var result = [];
     var qs = [];
     qs.push({
-        script: 'i0=g.v('+req.session.userId+')\nx=[];i0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x);i0.outE(\'Likes\').inV().has(\'type\',\'Actor\').inE(\'Acted\').outV().outE(\'GENRE\').inV().inE(\'Likes\').outV().filter(){it == i0}.back(5).except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})',
+        script: 'i0=g.v('+req.session.userId+')\nx=[];i0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x).back(4).outE(\'Likes\').inV().has(\'type\',\'Actor\').inE(\'Acted\').outV().outE(\'GENRE\').inV().inE(\'Likes\').outV().filter(){it == i0}.back(5).except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})',
         'rexster.showTypes':true
     })
     qs.push({
-        script: 'i0=g.v('+req.session.userId+')\nx=[];i0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x);i0.outE(\'Likes\').inV().has(\'type\',\'Actor\').inE(\'Acted\').outV().outE(\'Directed\').inV().inE(\'Likes\').outV().filter(){it == i0}.back(5).except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})',
+        script: 'i0=g.v('+req.session.userId+')\nx=[];i0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x).back(4).outE(\'Likes\').inV().has(\'type\',\'Actor\').inE(\'Acted\').outV().outE(\'Directed\').inV().inE(\'Likes\').outV().filter(){it == i0}.back(5).except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})',
         'rexster.showTypes':true
     });
     qs.push({
-        script: 'i0=g.v('+req.session.userId+')\nx=[];i0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x);i0.outE(\'Likes\').inV().has(\'type\',\'Director\').inE(\'Directed\').outV().outE(\'GENRE\').inV().inE(\'Likes\').outV().filter(){it == i0}.back(5).except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})',
+        script: 'i0=g.v('+req.session.userId+')\nx=[];i0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x).back(4).outE(\'Likes\').inV().has(\'type\',\'Director\').inE(\'Directed\').outV().outE(\'GENRE\').inV().inE(\'Likes\').outV().filter(){it == i0}.back(5).except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})',
         'rexster.showTypes':true
     });
-    /*qs.push({
-        script: 'i0=g.v('+req.session.userId+')\ni0.outE(\'Likes\').inV().inE().outV().has(\'type\',\'Movie\').outE().inV().inE(\'Likes\').outV().filter(){it == i0}.back(5).has(\'type\',\'Movie\').order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})',
+    qs.push({
+        script: 'i0=g.v('+req.session.userId+')\nx=[]\ni0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x).back(4).outE(\'Likes\').inV().has(\'type\',\'Genre\').inE(\'GENRE\').outV().except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})[0..<50]',
         'rexster.showTypes':true
-    });*/
+    });
+    qs.push({
+        script: 'i0=g.v('+req.session.userId+')\nx=[]\ni0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x).back(4).outE(\'Likes\').inV().has(\'type\',\'Actor\').inE(\'Acted\').outV().except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})[0..<50]',
+        'rexster.showTypes':true
+    });
+    qs.push({
+        script: 'i0=g.v('+req.session.userId+')\nx=[]\ni0.outE(\'Likes\').inV().has(\'type\',\'Movie\').aggregate(x).back(4).outE(\'Likes\').inV().has(\'type\',\'Director\').inE(\'Directed\').outV().except(x).order({it.b.getProperty(\'rating\') <=> it.a.getProperty(\'rating\')})[0..<50]',
+        'rexster.showTypes':true
+    });
     function getOptions(i){
         var options = {
             hostname: graphSettings.host,
@@ -165,10 +173,24 @@ app.get('/api/rec', function(req, res) {
         };
         return options;
     }
-    function sendRes(){
-        console.log('sending');
-       res.json((_.sortBy(_.uniq(_.flatten(result)), function(item){return item.rating.value})).reverse())
-    }
+    /*function insertValue(item) {
+        var key;
+        var newItem = {};
+        for(key in item){
+            console.log(key)
+            if(key == "_id"){
+                newItem[key] = item[key];
+                console.log(newItem[key]);
+            }
+            else
+                newItem[key] = {value: item[key]};
+        }
+        return newItem;
+    }*/
+
+    /*function sendRes(){
+       res.json((_.sortBy(_.uniq(_.flatten(result)), function(item){return item.rating.value; })).reverse())
+    }*/
     for(i=0;i<qs.length;i++) {
         http.get(getOptions(i), function(resp) {
             var body = '';
@@ -177,10 +199,18 @@ app.get('/api/rec', function(req, res) {
             });
             resp.on('end', function() {
                 body = JSON.parse(body);
+                /*for(i=0;i<body.results.length;i++){
+                    if(typeof(body.results[i].rating.value) == "undefined"){
+                        console.log(body.results[i])
+                        body.results[i] = insertValue(body.results[i])
+                    }
+                }*/
                 result.push(body.results)
                 count++;
-                if(count == qs.length)
-                    sendRes();
+                if(count == qs.length){
+                    res.json(result)
+                    //sendRes();
+                }
             });
             if (body.message || body.success === false) {
                 count++;
@@ -194,8 +224,10 @@ app.get('/api/rec', function(req, res) {
 
 app.get('/api/search/:query', function (req, res) {
     //console.log(req.session);
+    var param = req.params.query;
+    console.log(param);
     var qs = {
-        script: 'g.V.has("name", Text.CONTAINS_REGEX, ".*'+req.params.query+'.*")',
+        script: 'g.V.has("name", Text.CONTAINS_REGEX, ".*'+param+'.*")',
         'rexster.showTypes': true
     };
     var options = {
@@ -206,7 +238,7 @@ app.get('/api/search/:query', function (req, res) {
             'Content-type': 'application/json;charset=utf-8'
         }
     };
-    //console.log(options)
+    console.log(options)
     http.get(options, function(resp) {
         var body = '';
         resp.on('data', function(chunk) {
